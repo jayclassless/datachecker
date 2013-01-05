@@ -15,6 +15,9 @@ __all__ = (
     'length',
     'constant',
     'choice',
+    'lower',
+    'upper',
+    'strip',
 )
 
 
@@ -130,9 +133,6 @@ def boolean(coerce=False):
 
 @processor
 def length(min=None, max=None, exact=None):
-    if min is None and max is None and exact is None:
-        raise ValueError('At least one bound must be specified')
-
     def length(data):
         try:
             l = len(data)
@@ -165,4 +165,41 @@ def choice(*choices):
             raise DataError(data)
         return data
     return choice
+
+
+@processor
+def lower():
+    def lower(data):
+        try:
+            return data.lower()
+        except AttributeError:
+            raise DataTypeError('string')
+    return lower
+
+
+@processor
+def upper():
+    def upper(data):
+        try:
+            return data.upper()
+        except AttributeError:
+            raise DataTypeError('string')
+    return upper
+
+
+@processor
+def strip(left=True, right=True, chars=None):
+    def strip(data):
+        try:
+            if left and right:
+                return data.strip(chars)
+            elif left:
+                return data.lstrip(chars)
+            elif right:
+                return data.rstrip(chars)
+            else:
+                return data
+        except AttributeError:
+            raise DataTypeError('string')
+    return strip
 
