@@ -2,6 +2,7 @@ import __builtin__
 import re
 
 from decimal import Decimal, InvalidOperation
+from urlparse import urlparse
 
 from .errors import *
 from .util import processor
@@ -27,6 +28,8 @@ __all__ = (
     'alpha',
     'numeric',
     'alphanumeric',
+
+    'url',
 )
 
 
@@ -237,4 +240,19 @@ def numeric():
 @processor
 def alphanumeric():
     return match(r'^[^\W_]*$', options=re.UNICODE)
+
+
+@processor
+def url(schemes=None):
+    def url(data):
+        try:
+            parsed = urlparse(data)
+        except AttributeError:
+            raise DataTypeError('string')
+
+        if parsed.scheme and (parsed.netloc or parsed.path) and (not schemes or parsed.scheme in schemes):
+            return data
+        else:
+            raise DataError(data)
+    return url
 
