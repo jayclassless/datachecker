@@ -1,4 +1,5 @@
 import __builtin__
+import re
 
 from decimal import Decimal, InvalidOperation
 
@@ -12,12 +13,20 @@ __all__ = (
     'decimal',
     'string',
     'boolean',
+
     'length',
+
     'constant',
     'choice',
+
     'lower',
     'upper',
     'strip',
+
+    'match',
+    'alpha',
+    'numeric',
+    'alphanumeric',
 )
 
 
@@ -202,4 +211,30 @@ def strip(left=True, right=True, chars=None):
         except AttributeError:
             raise DataTypeError('string')
     return strip
+
+
+@processor
+def match(regex, options=0):
+    pattern = re.compile(regex, options)
+    def match(data):
+        try:
+            if pattern.match(data):
+                return data
+            else:
+                raise DataError(data)
+        except TypeError:
+            raise DataTypeError('string')
+    return match
+
+@processor
+def alpha():
+    return match(r'^[^\W\d_]*$', options=re.UNICODE)
+
+@processor
+def numeric():
+    return match(r'^\d*$', options=re.UNICODE)
+
+@processor
+def alphanumeric():
+    return match(r'^[^\W_]*$', options=re.UNICODE)
 
