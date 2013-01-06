@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from decimal import Decimal
 
 import datachecker as dc
@@ -56,6 +58,99 @@ def check_url_bad(input, schemes, expected_exception):
         pass
     except Exception as ex:
         raise ex
+    else:
+        assert False, 'Got output of: %s' % output
+
+
+
+GOOD_EMAIL_TESTS = (
+    ('person@example.com', False),
+    ('person@exam-ple.com', False),
+    ('person@exam--ple.com', False),
+
+    ('foo@gmail.com', True),
+    ('foo@yahoo.com', True),
+
+    # http://idn.icann.org/E-mail_test
+    (u'mailtest@مثال.إختبار', False),
+    (u'mailtest@例子.测试', False),
+    (u'mailtest@例子.測試', False),
+    (u'mailtest@παράδειγμα.δοκιμή', False),
+    (u'mailtest@उदाहरण.परीक्षा', False),
+    (u'mailtest@例え.テスト', False),
+    (u'mailtest@실례.테스트', False),
+    (u'mailtest@مثال.آزمایشی', False),
+    (u'mailtest@пример.испытание', False),
+    (u'mailtest@உதாரணம்.பரிட்சை', False),
+    (u'mailtest@בײַשפּיל.טעסט', False),
+    (u'mailtest@xn--mgbh0fb.xn--kgbechtv', False),
+    (u'mailtest@xn--fsqu00a.xn--0zwm56d', False),
+    (u'mailtest@xn--fsqu00a.xn--g6w251d', False),
+    (u'mailtest@xn--hxajbheg2az3al.xn--jxalpdlp', False),
+    (u'mailtest@xn--p1b6ci4b4b3a.xn--11b5bs3a9aj6g', False),
+    (u'mailtest@xn--r8jz45g.xn--zckzah', False),
+    (u'mailtest@xn--9n2bp8q.xn--9t4b11yi5a', False),
+    (u'mailtest@xn--mgbh0fb.xn--hgbk6aj7f53bba', False),
+    (u'mailtest@xn--e1afmkfd.xn--80akhbyknj4f', False),
+    (u'mailtest@xn--zkc6cc5bi7f6e.xn--hlcj6aya9esc7a', False),
+    (u'mailtest@xn--fdbk5d8ap9b8a8d.xn--deba0ad', False),
+)
+
+def test_email_good():
+    for input, check_dns in GOOD_EMAIL_TESTS:
+        yield check_email_good, input, check_dns
+
+def check_email_good(input, check_dns):
+    checker = dc.Checker(dc.email(check_dns=check_dns))
+    output = checker.process(input)
+    assert output == input, 'Got output of: %s' % output
+
+
+BAD_EMAIL_TESTS = (
+    ('', False),
+    ('foo', False),
+    ('foo@bar', False),
+    ('', True),
+    ('foo', True),
+    ('foo@bar', True),
+
+    ('person@example-.com', False),
+    ('person@-example.com', False),
+    ('person@exam-.ple-.com', False),
+    ('person@exam-.-ple.com', False),
+    ('person@.com', False),
+    ('person@example-.com', True),
+    ('person@-example.com', True),
+    ('person@exam-.ple-.com', True),
+    ('person@exam-.-ple.com', True),
+    ('person@.com', True),
+
+    ('foo@sdkjhldkshfslkdjhdslkjhdlksfhgdslgdf.com', True),
+    ('foo@as-d-asd-asd-asdasda-sd-asd-asd.net', True),
+)
+BAD_EMAIL_TESTS2 = (
+    (1, False),
+    (1.23, False),
+    (Decimal('1'), False),
+    (True, False),
+    (1, True),
+    (1.23, True),
+    (Decimal('1'), True),
+    (True, True),
+)
+
+def test_email_bad():
+    for input, check_dns in BAD_EMAIL_TESTS:
+        yield check_email_bad, input, check_dns, dc.DataError
+    for input, check_dns in BAD_EMAIL_TESTS2:
+        yield check_email_bad, input, check_dns, dc.DataTypeError
+
+def check_email_bad(input, check_dns, expected_exception):
+    checker = dc.Checker(dc.email(check_dns=check_dns))
+    try:
+        output = checker.process(input)
+    except expected_exception:
+        pass
     else:
         assert False, 'Got output of: %s' % output
 
