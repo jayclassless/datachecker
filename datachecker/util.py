@@ -1,6 +1,10 @@
+from .errors import BoundsError
+
 
 __all__ = (
     'processor',
+    'is_processor_generator',
+    'check_bounds',
 )
 
 
@@ -10,4 +14,13 @@ def processor(func):
 
 def is_processor_generator(func):
     return getattr(func, '_processor_generator', False)
+
+def check_bounds(data, min=None, max=None, exact=None):
+    if exact is not None and data != exact:
+        raise BoundsError('not', exact)
+    else:
+        if min is not None and min > data:
+            raise BoundsError('below', min)
+        if max is not None and max < data:
+            raise BoundsError('above', max)
 
