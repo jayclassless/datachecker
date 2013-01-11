@@ -12,7 +12,7 @@ class Checker(object):
         for processor in processors:
             if is_processor_generator(processor):
                 processor = processor()
-        self.processors.append(processor)
+            self.processors.append(processor)
 
     def process(self, data):
         clean_data = data
