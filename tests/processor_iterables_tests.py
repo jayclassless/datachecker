@@ -24,8 +24,6 @@ def check_length_exact_bad(input, length):
         output = checker.process(input)
     except dc.CheckerError:
         pass
-    except Exception  as ex:
-        raise ex
     else:
         assert False, 'Got output of: %s' % output
 
@@ -67,7 +65,16 @@ def check_length_bounds_bad(input, min, max):
         output = checker.process(input)
     except dc.CheckerError:
         pass
-    except Exception as ex:
-        raise ex
     else:
         assert False, 'Got output of: %s' % output
+
+
+def test_length_noninterable():
+    checker = dc.Checker(dc.length(min=5))
+    try:
+        output = checker.process(3)
+    except dc.DataTypeError:
+        pass
+    else:
+        assert False, 'Got output of: %s' % output
+

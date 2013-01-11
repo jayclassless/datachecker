@@ -70,6 +70,7 @@ GOOD_EMAIL_TESTS = (
 
     ('foo@gmail.com', True),
     ('foo@yahoo.com', True),
+    ('foo@example.com', True),
 
     # http://idn.icann.org/E-mail_test
     (u'mailtest@مثال.إختبار', False),
