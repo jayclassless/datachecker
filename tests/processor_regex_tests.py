@@ -61,7 +61,7 @@ REGEX_BAD_TESTS2 = (
 
 def test_regex_bad():
     for processor, input in REGEX_BAD_TESTS:
-        yield check_regex_bad, processor, input, dc.DataError
+        yield check_regex_bad, processor, input, dc.FormatError
     for processor, input in REGEX_BAD_TESTS2:
         yield check_regex_bad, processor, input, dc.DataTypeError
 

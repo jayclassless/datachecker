@@ -1,4 +1,4 @@
-from ..errors import DataError
+from ..errors import InvalidError
 from ..util import processor
 
 
@@ -12,7 +12,7 @@ __all__ = (
 def constant(value):
     def constant(data):
         if data != value:
-            raise DataError(data)
+            raise InvalidError(data)
         return data
     return constant
 
@@ -21,7 +21,7 @@ def constant(value):
 def choice(*choices):
     def choice(data):
         if data not in choices:
-            raise DataError(data)
+            raise InvalidError(data)
         return data
     return choice
 

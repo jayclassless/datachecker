@@ -22,7 +22,7 @@ def check_length_exact_bad(input, length):
     checker = dc.Checker(dc.length(exact=length))
     try:
         output = checker.process(input)
-    except dc.CheckerError:
+    except dc.BoundsError:
         pass
     else:
         assert False, 'Got output of: %s' % output
@@ -63,7 +63,7 @@ def check_length_bounds_bad(input, min, max):
     checker = dc.Checker(dc.length(min=min, max=max))
     try:
         output = checker.process(input)
-    except dc.CheckerError:
+    except dc.BoundsError:
         pass
     else:
         assert False, 'Got output of: %s' % output

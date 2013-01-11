@@ -155,7 +155,7 @@ BAD_DICT_TESTS = (
 
     ({'foo': 1}, dc.dict({'foo': [dc.required, dc.string]}), dc.DataTypeError),
     ({'foo': 'bar'}, dc.dict({'foo': [dc.required, dc.string], 'baz': [dc.required, dc.integer]}), dc.DataRequiredError),
-    ({'foo': 1}, dc.dict({'foo': [dc.required, dc.string], 'baz': [dc.required, dc.integer]}, capture_all_errors=True), dc.CheckerError),
+    ({'foo': 1}, dc.dict({'foo': [dc.required, dc.string], 'baz': [dc.required, dc.integer]}, capture_all_errors=True), dc.DictionaryError),
     ({'foo': 'bar', 'baz': 1}, dc.dict({'foo': [dc.required, dc.string]}), dc.ExtraDataError),
 )
 

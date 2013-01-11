@@ -46,7 +46,7 @@ BAD_URL_TESTS2 = (
 
 def test_url_bad():
     for input, schemes in BAD_URL_TESTS:
-        yield check_url_bad, input, schemes, dc.DataError
+        yield check_url_bad, input, schemes, dc.FormatError
     for input, schemes in BAD_URL_TESTS2:
         yield check_url_bad, input, schemes, dc.DataTypeError
 
@@ -108,26 +108,26 @@ def check_email_good(input, check_dns):
 
 
 BAD_EMAIL_TESTS = (
-    ('', False),
-    ('foo', False),
-    ('foo@bar', False),
-    ('', True),
-    ('foo', True),
-    ('foo@bar', True),
+    ('', False, dc.FormatError),
+    ('foo', False, dc.FormatError),
+    ('foo@bar', False, dc.FormatError),
+    ('', True, dc.FormatError),
+    ('foo', True, dc.FormatError),
+    ('foo@bar', True, dc.FormatError),
 
-    ('person@example-.com', False),
-    ('person@-example.com', False),
-    ('person@exam-.ple-.com', False),
-    ('person@exam-.-ple.com', False),
-    ('person@.com', False),
-    ('person@example-.com', True),
-    ('person@-example.com', True),
-    ('person@exam-.ple-.com', True),
-    ('person@exam-.-ple.com', True),
-    ('person@.com', True),
+    ('person@example-.com', False, dc.FormatError),
+    ('person@-example.com', False, dc.FormatError),
+    ('person@exam-.ple-.com', False, dc.FormatError),
+    ('person@exam-.-ple.com', False, dc.FormatError),
+    ('person@.com', False, dc.FormatError),
+    ('person@example-.com', True, dc.FormatError),
+    ('person@-example.com', True, dc.FormatError),
+    ('person@exam-.ple-.com', True, dc.FormatError),
+    ('person@exam-.-ple.com', True, dc.FormatError),
+    ('person@.com', True, dc.FormatError),
 
-    ('foo@sdkjhldkshfslkdjhdslkjhdlksfhgdslgdf.com', True),
-    ('foo@as-d-asd-asd-asdasda-sd-asd-asd.net', True),
+    ('foo@sdkjhldkshfslkdjhdslkjhdlksfhgdslgdf.com', True, dc.InvalidError),
+    ('foo@as-d-asd-asd-asdasda-sd-asd-asd.net', True, dc.InvalidError),
 )
 BAD_EMAIL_TESTS2 = (
     (1, False),
@@ -141,8 +141,8 @@ BAD_EMAIL_TESTS2 = (
 )
 
 def test_email_bad():
-    for input, check_dns in BAD_EMAIL_TESTS:
-        yield check_email_bad, input, check_dns, dc.DataError
+    for input, check_dns, expected_exception in BAD_EMAIL_TESTS:
+        yield check_email_bad, input, check_dns, expected_exception
     for input, check_dns in BAD_EMAIL_TESTS2:
         yield check_email_bad, input, check_dns, dc.DataTypeError
 

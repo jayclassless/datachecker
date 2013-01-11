@@ -1,7 +1,7 @@
 import __builtin__
 
 from ..checker import Checker
-from ..errors import CheckerError, DataTypeError, ExtraDataError
+from ..errors import CheckerError, DataTypeError, DictionaryError, ExtraDataError
 from ..util import processor
 
 
@@ -116,9 +116,7 @@ def dict(structure, **options):
                     raise
 
         if errors:
-            ce = CheckerError('The dictionary failed processing')
-            ce.errors = errors
-            raise ce
+            raise DictionaryError(errors)
 
         return cleandata
 

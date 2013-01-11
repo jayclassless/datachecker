@@ -3,7 +3,7 @@ import re
 from urlparse import urlparse
 
 from .regex import match
-from ..errors import DataTypeError, DataError
+from ..errors import DataTypeError, FormatError, InvalidError
 from ..util import processor
 
 
@@ -32,12 +32,12 @@ def email(check_dns=False):
         except AttributeError:
             raise DataTypeError('string')
         except ValueError:
-            raise DataError(data)
+            raise FormatError(data)
 
         try:
             domain_ascii = domain.encode('idna')
         except UnicodeError:
-            raise DataError(data)
+            raise FormatError(data)
         data_ascii = '%s@%s' % (local_part, domain_ascii)
         email_match(data_ascii)
 
@@ -46,14 +46,14 @@ def email(check_dns=False):
                 answer = dns.resolver.query(domain_ascii, 'MX')
             except dns.resolver.NXDOMAIN:
                 # Domain doesn't exist.
-                raise DataError(data)
+                raise InvalidError(data)
             except dns.resolver.NoAnswer:
                 # Domain exists, but no MX records, try for an A.
                 try:
                     answer = dns.resolver.query(domain_ascii, 'A')
                 except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
                     # No A record either; domain not suitable for email.
-                    raise DataError(data)
+                    raise InvalidError(data)
                 except:
                     # Either a timeout or a DNS server error occurred. Not indicative
                     # of a bad domain. Assume good.
@@ -78,6 +78,6 @@ def url(schemes=None):
         if parsed.scheme and (parsed.netloc or parsed.path) and (not schemes or parsed.scheme in schemes):
             return data
         else:
-            raise DataError(data)
+            raise FormatError(data)
     return url
 

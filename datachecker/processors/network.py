@@ -1,6 +1,6 @@
 import socket
 
-from ..errors import DataError, DataTypeError
+from ..errors import FormatError, DataTypeError
 from ..util import processor
 
 
@@ -24,7 +24,7 @@ def ip(ipv4=True, ipv6=socket.has_ipv6):
                 raise DataTypeError('string')
             except socket.error:
                 if not ipv6:
-                    raise DataError(data)
+                    raise FormatError(data)
             else:
                 return data
 
@@ -34,7 +34,7 @@ def ip(ipv4=True, ipv6=socket.has_ipv6):
             except TypeError:
                 raise DataTypeError('string')
             except socket.error:
-                raise DataError(data)
+                raise FormatError(data)
             else:
                 return data
 

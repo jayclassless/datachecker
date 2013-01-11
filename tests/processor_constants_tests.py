@@ -14,7 +14,7 @@ def test_constant_bad():
     checker = dc.Checker(dc.constant('foo'))
     try:
         output = checker.process('bar')
-    except dc.CheckerError:
+    except dc.InvalidError:
         pass
     except Exception as ex:
         raise ex
@@ -35,7 +35,7 @@ def test_choice_bad():
     for input in (1, 'foo', False, Decimal('1.234')):
         try:
             output = checker.process(input)
-        except dc.CheckerError:
+        except dc.InvalidError:
             pass
         except Exception as ex:
             raise ex

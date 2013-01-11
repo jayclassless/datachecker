@@ -85,7 +85,7 @@ BAD_IP_TESTS2 = (
 
 def test_ip_bad():
     for input, ipv4, ipv6 in BAD_IP_TESTS:
-        yield check_ip_bad, input, ipv4, ipv6, dc.DataError
+        yield check_ip_bad, input, ipv4, ipv6, dc.FormatError
     for input, ipv4, ipv6 in BAD_IP_TESTS2:
         yield check_ip_bad, input, ipv4, ipv6, dc.DataTypeError
 

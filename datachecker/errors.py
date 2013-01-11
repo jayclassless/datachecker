@@ -3,8 +3,10 @@ __all__ = (
     'CheckerError',
     'DataTypeError',
     'BoundsError',
-    'DataError',
+    'InvalidError',
+    'FormatError',
     'DataRequiredError',
+    'DictionaryError',
     'ExtraDataError',
 )
 
@@ -23,14 +25,25 @@ class BoundsError(CheckerError):
         super(BoundsError, self).__init__('Value is %s the limit of %s' % (direction, limit))
 
 
-class DataError(CheckerError):
-    def __init__(self, value):
-        super(DataError, self).__init__('%s is not a valid value' % value)
+class InvalidError(CheckerError):
+    def __init__(self, data):
+        super(InvalidError, self).__init__('%s is not a valid data value' % data)
+
+
+class FormatError(CheckerError):
+    def __init__(self, data):
+        super(FormatError, self).__init__('%s is not formatted properly' % data)
 
 
 class DataRequiredError(CheckerError):
     def __init__(self):
         super(DataRequiredError, self).__init__('A value is required')
+
+
+class DictionaryError(CheckerError):
+    def __init__(self, errors):
+        super(DictionaryError, self).__init__('')
+        self.errors = errors
 
 
 class ExtraDataError(CheckerError):

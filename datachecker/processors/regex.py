@@ -1,6 +1,6 @@
 import re
 
-from ..errors import DataError, DataTypeError
+from ..errors import FormatError, DataTypeError
 from ..util import processor
 
 
@@ -20,7 +20,7 @@ def match(regex, options=0):
             if pattern.match(data):
                 return data
             else:
-                raise DataError(data)
+                raise FormatError(data)
         except TypeError:
             raise DataTypeError('string')
     return match
