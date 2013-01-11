@@ -18,7 +18,6 @@ GOOD_LIST_TESTS = (
     (Decimal('1.23'), [Decimal('1.23')], [dc.decimal], True),
     ('foo', ['foo'], [dc.string], True),
     (False, [False], [dc.boolean], True),
-    (None, [], [dc.string], True),
     ((1,2,3), [1,2,3], [dc.integer], True),
 
     (['  foo','bar  '], ['foo','bar'], [dc.string, dc.strip], False),
@@ -41,8 +40,9 @@ BAD_LIST_TESTS = (
     (Decimal('1.23'), [dc.decimal], False),
     ('foo', [dc.string], False),
     (False, [dc.boolean], False),
-    (None, [dc.string], False),
     ((1,2,3), [dc.integer], False),
+    (None, [dc.string], False),
+    (None, [dc.string], True),
 
     ([1,'foo'], [dc.integer], False),
     ([1,'foo'], [dc.integer], True),
@@ -79,7 +79,6 @@ GOOD_TUPLE_TESTS = (
     (Decimal('1.23'), (Decimal('1.23'),), [dc.decimal], True),
     ('foo', ('foo',), [dc.string], True),
     (False, (False,), [dc.boolean], True),
-    (None, (), [dc.string], True),
     ([1,2,3], (1,2,3), [dc.integer], True),
 
     (('  foo','bar  '), ('foo','bar'), [dc.string, dc.strip], False),
@@ -103,6 +102,7 @@ BAD_TUPLE_TESTS = (
     ('foo', [dc.string], False),
     (False, [dc.boolean], False),
     (None, [dc.string], False),
+    (None, [dc.string], True),
     ([1,2,3], [dc.integer], False),
 
     ((1,'foo'), [dc.integer], False),
@@ -120,6 +120,54 @@ def check_bad_tuple(input, processors, coerce):
     try:
         output = checker.process(input)
     except dc.CheckerError:
+        pass
+    else:
+        assert False, 'Got output of: %s' % output
+
+
+GOOD_DICT_TESTS = (
+    ({'foo': 'bar'}, {'foo': 'bar'}, dc.dict({'foo': dc.string})),
+    ({'foo': 'bar'}, {'foo': 'bar'}, dc.dict({'foo': [dc.required, dc.string]})),
+
+    ({'foo': 'bar', 'baz': 1}, {'foo': 'bar', 'baz': 1}, dc.dict({'foo': [dc.required, dc.string], 'baz': [dc.optional(default=2), dc.integer]})),
+    ({'foo': 'bar'}, {'foo': 'bar', 'baz': 2}, dc.dict({'foo': [dc.required, dc.string], 'baz': [dc.optional(default=2), dc.integer]})),
+
+    ({'foo': 'bar', 'baz': 2}, {'foo': 'bar'}, dc.dict({'foo': [dc.required, dc.string]}, ignore_extra=True)),
+    ({'foo': 'bar', 'baz': 2}, {'foo': 'bar', 'baz': 2}, dc.dict({'foo': [dc.required, dc.string]}, pass_extra=True)),
+    ({'foo': 'bar', 'baz': 2}, {'foo': 'bar'}, dc.dict({'foo': [dc.required, dc.string]}, ignore_extra=True, pass_extra=True)),
+
+    ((('foo', 'bar'), ('baz', 1)), {'foo': 'bar', 'baz': 1}, dc.dict({'foo': [dc.required, dc.string], 'baz': [dc.optional(default=2), dc.integer]}, coerce=True)),
+)
+
+def test_good_dicts():
+    for input, expected, processor in GOOD_DICT_TESTS:
+        yield check_good_dict, input, expected, processor
+
+def check_good_dict(input, expected, processor):
+    checker = dc.Checker(processor)
+    output = checker.process(input)
+    assert output == expected, 'Got output of: %s' % output
+
+
+BAD_DICT_TESTS = (
+    (1, dc.dict({'foo': [dc.required, dc.string]}, coerce=False), dc.DataTypeError),
+    (1, dc.dict({'foo': [dc.required, dc.string]}, coerce=True), dc.DataTypeError),
+
+    ({'foo': 1}, dc.dict({'foo': [dc.required, dc.string]}), dc.DataTypeError),
+    ({'foo': 'bar'}, dc.dict({'foo': [dc.required, dc.string], 'baz': [dc.required, dc.integer]}), dc.DataRequiredError),
+    ({'foo': 1}, dc.dict({'foo': [dc.required, dc.string], 'baz': [dc.required, dc.integer]}, capture_all_errors=True), dc.CheckerError),
+    ({'foo': 'bar', 'baz': 1}, dc.dict({'foo': [dc.required, dc.string]}), dc.ExtraDataError),
+)
+
+def test_bad_dicts():
+    for input, processor, expected_exception in BAD_DICT_TESTS:
+        yield check_bad_dict, input, processor, expected_exception
+
+def check_bad_dict(input, processor, expected_exception):
+    checker = dc.Checker(processor)
+    try:
+        output = checker.process(input)
+    except expected_exception:
         pass
     else:
         assert False, 'Got output of: %s' % output

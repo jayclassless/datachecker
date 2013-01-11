@@ -63,9 +63,6 @@ GOOD_DATATYPE_TESTS = (
     (dc.integer, True, True, 1),
     (dc.integer, False, True, 0),
 
-    # integer: None coercion
-    (dc.integer, None, True, 0),
-
 
     # float: floats
     (dc.float, 0.0, False, 0.0),
@@ -106,9 +103,6 @@ GOOD_DATATYPE_TESTS = (
     (dc.float, Decimal('1.234'), True, 1.234),
     (dc.float, Decimal('0.234'), True, 0.234),
     (dc.float, Decimal('-1.234'), True, -1.234),
-
-    # float: None coercion
-    (dc.float, None, True, 0.0),
 
 
     # decimal: decimals
@@ -153,9 +147,6 @@ GOOD_DATATYPE_TESTS = (
     (dc.decimal, 0.234, True, Decimal('0.234')),
     (dc.decimal, -1.234, True, Decimal('-1.234')),
 
-    # decimal: None coercion
-    (dc.decimal, None, True, Decimal('0.0')),
-
 
     # string: strings
     (dc.string, 'foo', False, 'foo'),
@@ -191,9 +182,6 @@ GOOD_DATATYPE_TESTS = (
     (dc.string, Decimal('1.234'), True, '1.234'),
     (dc.string, Decimal('0.234'), True, '0.234'),
     (dc.string, Decimal('-1.234'), True, '-1.234'),
-
-    # string: None coercion
-    (dc.string, None, True, ''),
 
     # string: object coercion
     (dc.string, strobject(), True, 'MY STROBJECT'),
@@ -277,6 +265,7 @@ BAD_DATATYPE_TESTS = (
 
     # integer: Other coercions
     (dc.integer, None, False),
+    (dc.integer, None, True),
     (dc.integer, {}, False),
     (dc.integer, {}, True),
     (dc.integer, [], False),
@@ -321,6 +310,7 @@ BAD_DATATYPE_TESTS = (
 
     # float: Other coercions
     (dc.float, None, False),
+    (dc.float, None, True),
     (dc.float, {}, False),
     (dc.float, {}, True),
     (dc.float, [], False),
@@ -367,6 +357,7 @@ BAD_DATATYPE_TESTS = (
 
     # decimal: Other coercions
     (dc.decimal, None, False),
+    (dc.decimal, None, True),
     (dc.decimal, {}, False),
     (dc.decimal, {}, True),
     (dc.decimal, [], False),
@@ -409,6 +400,7 @@ BAD_DATATYPE_TESTS = (
 
     # string: Other coercions
     (dc.string, None, False),
+    (dc.string, None, True),
     (dc.string, {}, False),
     (dc.string, {}, True),
     (dc.string, [], False),
@@ -416,6 +408,48 @@ BAD_DATATYPE_TESTS = (
     (dc.string, (), False),
     (dc.string, (), True),
     (dc.string, strobject(), False),
+
+
+    # boolean: Normal int coercion
+    (dc.boolean, 1, False),
+    (dc.boolean, 0, False),
+    (dc.boolean, -1, False),
+
+    # boolean: long coercion
+    (dc.boolean, 1L, False),
+    (dc.boolean, 0L, False),
+    (dc.boolean, -1L, False),
+
+    # boolean: float coercion
+    (dc.boolean, 1.0, False),
+    (dc.boolean, 0.0, False),
+    (dc.boolean, -1.0, False),
+    (dc.boolean, 1.234, False),
+    (dc.boolean, 0.234, False),
+    (dc.boolean, -1.234, False),
+
+    # boolean: string coercion
+    (dc.float, 'foo', True),
+    (dc.float, '', True),
+
+    # boolean: Decimal coercion
+    (dc.boolean, Decimal('1'), False),
+    (dc.boolean, Decimal('0'), False),
+    (dc.boolean, Decimal('-1'), False),
+    (dc.boolean, Decimal('1.234'), False),
+    (dc.boolean, Decimal('0.234'), False),
+    (dc.boolean, Decimal('-1.234'), False),
+
+    # boolean: Other coercions
+    (dc.boolean, None, False),
+    (dc.boolean, None, True),
+    (dc.boolean, {}, False),
+    (dc.boolean, {}, True),
+    (dc.boolean, [], False),
+    (dc.boolean, [], True),
+    (dc.boolean, (), False),
+    (dc.boolean, (), True),
+    (dc.boolean, strobject(), False),
 )
 
 def test_bad_datatypes():
@@ -428,8 +462,6 @@ def check_bad_datatype(processor, input, coerce):
         output = checker.process(input)
     except dc.CheckerError:
         pass
-    except Exception as ex:
-        raise ex
     else:
         assert False, 'Got output of: %s' % output
         
@@ -475,8 +507,6 @@ def check_bad_datatype_bounds(processor, min, max, input):
         output = checker.process(input)
     except dc.CheckerError:
         pass
-    except Exception  as ex:
-        raise ex
     else:
         assert False, 'Got output of: %s' % output
 

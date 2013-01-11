@@ -18,9 +18,7 @@ __all__ = (
 @processor
 def integer(coerce=False, min=None, max=None):
     def integer(data):
-        if data is None and coerce:
-            data = 0
-        elif not isinstance(data, (int, long)) and not coerce:
+        if not isinstance(data, (int, long)) and not coerce:
             raise DataTypeError('integer')
         else:
             try:
@@ -45,9 +43,7 @@ def integer(coerce=False, min=None, max=None):
 @processor
 def float(coerce=False, min=None, max=None):
     def float(data):
-        if data is None and coerce:
-            data = 0.0
-        elif not isinstance(data, __builtin__.float) and not coerce:
+        if not isinstance(data, __builtin__.float) and not coerce:
             raise DataTypeError('float')
         else:
             try:
@@ -65,9 +61,7 @@ def float(coerce=False, min=None, max=None):
 @processor
 def decimal(coerce=False, min=None, max=None):
     def decimal(data):
-        if data is None and coerce:
-            data = Decimal('0.0')
-        elif not isinstance(data, Decimal) and not coerce:
+        if not isinstance(data, Decimal) and not coerce:
             raise DataTypeError('decimal')
         else:
             try:
@@ -85,11 +79,9 @@ def decimal(coerce=False, min=None, max=None):
 @processor
 def string(coerce=False):
     def string(data):
-        if data is None and coerce:
-            data = unicode('')
-        elif not isinstance(data, basestring) and not coerce:
+        if not isinstance(data, basestring) and not coerce:
             raise DataTypeError('string')
-        elif isinstance(data, (dict, list, tuple)):
+        elif isinstance(data, (dict, list, tuple, type(None))):
             raise DataTypeError('string')
         else:
             data = unicode(data)
@@ -102,9 +94,7 @@ def string(coerce=False):
 @processor
 def boolean(coerce=False):
     def boolean(data):
-        if data is None and coerce:
-            data = False
-        elif not isinstance(data, bool) and not coerce:
+        if not isinstance(data, bool) and not coerce:
             raise DataTypeError('boolean')
         else:
             data = unicode(data).strip().lower()
@@ -116,6 +106,4 @@ def boolean(coerce=False):
                 raise DataTypeError('boolean')
 
     return boolean
-
-
 
