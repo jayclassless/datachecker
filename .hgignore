@@ -3,3 +3,4 @@ syntax: glob
 *.pyc
 datachecker.egg-info
 .venv
+.coverage
