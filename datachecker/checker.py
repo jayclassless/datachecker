@@ -1,3 +1,4 @@
+from .errors import CheckerError
 from .util import is_processor_generator
 
 
