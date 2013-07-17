@@ -12,6 +12,7 @@ __all__ = (
 
 
 class CheckerError(Exception):
+    field = None
     pass
 
 

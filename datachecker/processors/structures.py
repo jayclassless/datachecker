@@ -104,7 +104,8 @@ def dict(structure, **options):
                 if capture_all_errors:
                     errors[name] = unicode(ex)
                 else:
-                    raise
+                    ex.field = name
+                    raise ex
 
         for name in (set(procs.keys()) - seen):
             try:
@@ -113,7 +114,8 @@ def dict(structure, **options):
                 if capture_all_errors:
                     errors[name] = unicode(ex)
                 else:
-                    raise
+                    ex.field = name
+                    raise ex
 
         if errors:
             raise DictionaryError(errors)
