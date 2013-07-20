@@ -304,6 +304,28 @@ Ensures that the input value is a string representation of an IP address.
     False
 
 
+**domain**
+
+Ensures that the input value looks like a domain.
+
+*Options*
+
+* check_dns: True/False; Tells the processor to actually perform DNS checks on the domain to determine if it is actually real. Defaults to False.
+
+*Examples*
+
+::
+
+    >>> dc.Checker(dc.domain).is_valid('google.com')
+    True
+    >>> dc.Checker(dc.domain).is_valid('googleco.m')
+    False
+    >>> dc.Checker(dc.domain).is_valid('foo.bar')
+    True
+    >>> dc.Checker(dc.domain(check_dns=True)).is_valid('foo.bar')
+    False
+
+
 **match**
 
 Ensures that the input value is a string that matches the given regular expression.
