@@ -2,5 +2,7 @@ syntax: glob
 *.swp
 *.pyc
 datachecker.egg-info
+dist
+build
 .venv
 .coverage
