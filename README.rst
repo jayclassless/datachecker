@@ -6,6 +6,7 @@ datachecker
 A simple example:
 
 ::
+
     >>> import datachecker as dc
     >>> checker = dc.Checker(dc.string, dc.strip, dc.email)
     >>> checker.is_valid('hello@example.com')
@@ -26,6 +27,7 @@ A simple example:
 A more involved example:
 
 ::
+
     >>> import datachecker as dc
     >>> checker = dc.Checker(dc.dict({
     ...     'foo': [dc.required, dc.string, dc.upper],
@@ -62,12 +64,14 @@ Installation
 Use `pip <http://www.pip-installer.org>`_. There are no excuses.
 
 ::
+
     pip install datachecker
 
 If you plan on using the DNS-checking abilities of the built-in email validator, then you'll also need
 to install `dnspython <http://www.dnspython.org>`_.
 
 ::
+
     pip install dnspython
 
 
@@ -88,11 +92,13 @@ Checker
 To use **datachecker**, you first build yourself a Checker object, telling it what processors to use. You can specify any number of processors to apply to your input data.
 
 ::
+
     >>> checker = dc.Checker(dc.required, dc.string, dc.upper)
 
 Then you can use your Checker object to validate and/or sanitize your data:
 
 ::
+
     >>> checker.process('foo')
     u'FOO'
     >>> checker.is_valid('foo')
@@ -126,6 +132,7 @@ Ensures the input value is an integer datatype (either ``int`` or ``long``).
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.integer).is_valid(1)
     True
     >>> dc.Checker(dc.integer).is_valid('1')
@@ -153,6 +160,7 @@ Ensures the input value is a ``float`` datatype.
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.float).is_valid(1)
     False
     >>> dc.Checker(dc.float).is_valid(1.23)
@@ -182,6 +190,7 @@ Ensures the input value is a ``Decimal`` datatype.
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.decimal).is_valid(Decimal('1.23'))
     True
     >>> dc.Checker(dc.decimal).is_valid('1.23')
@@ -207,6 +216,7 @@ Ensures the input value is a string datatype.
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.string).is_valid('abc')
     True
     >>> dc.Checker(dc.string).is_valid(1.23)
@@ -228,6 +238,7 @@ Ensures the input value is a ``bool`` datatype.
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.boolean).is_valid(True)
     True
     >>> dc.Checker(dc.boolean).is_valid(False)
@@ -257,6 +268,7 @@ Ensures that the input iterable has a length within the specified bounds. This p
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.length(min=2)).is_valid([1, 2, 3])
     True
     >>> dc.Checker(dc.length(min=2)).is_valid('abc')
@@ -281,6 +293,7 @@ Ensures that the input value is a string representation of an IP address.
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.ip).is_valid('127.0.0.1')
     True
     >>> dc.Checker(dc.ip).is_valid('foo')
@@ -304,6 +317,7 @@ There are also a set of built-in matchers: `alpha`, `numeric`, `alphanumeric`
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.match(r'^[abc]+$')).is_valid('abcabc')
     True
     >>> dc.Checker(dc.match(r'^[abc]+$')).is_valid('foo')
@@ -337,6 +351,7 @@ Ensures that the input value looks like an email address.
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.email).is_valid('foo@bar.com')
     True
     >>> dc.Checker(dc.email).is_valid('foo')
@@ -360,6 +375,7 @@ Ensures that the input value looks like a URL.
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.url).is_valid('http://www.google.com')
     True
     >>> dc.Checker(dc.url).is_valid('www.google.com')
@@ -379,6 +395,7 @@ Forces the input string to be all lowercase characters.
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.lower).process('FooBar')
     'foobar'
 
@@ -390,6 +407,7 @@ Forces the input string to be all uppercase characters.
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.upper).process('FooBar')
     'FOOBAR'
 
@@ -407,6 +425,7 @@ Removes whitespace (or specified characters) from one or both ends of a string.
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.strip).process('  foo  ')
     'foo'
     >>> dc.Checker(dc.strip(right=False)).process('  foo  ')
@@ -424,6 +443,7 @@ Forces the input string to be title-cased.
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.title).process('foo bar')
     'Foo Bar'
 
@@ -435,6 +455,7 @@ Forces the input to have its casing reversed so that lowercased characters becom
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.swapcase).process('FooBar')
     'fOObAR'
 
@@ -446,6 +467,7 @@ Forces the input string to have its first character capitalized and the rest low
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.capitalize).process('FooBar')
     'Foobar'
 
@@ -457,6 +479,7 @@ Ensures that the input value is a specific value.
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.constant('foo')).is_valid('foo')
     True
     >>> dc.Checker(dc.constant('foo')).is_valid('bar')
@@ -472,6 +495,7 @@ Ensures that the input value is one of a list of acceptible values.
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.choice('foo', 'bar')).is_valid('foo')
     True
     >>> dc.Checker(dc.choice('foo', 'bar')).is_valid('bar')
@@ -489,6 +513,7 @@ Ensures that a value was specified (e.g., the value is not ``None``)
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.required).is_valid('foo')
     True
     >>> dc.Checker(dc.required).is_valid(None)
@@ -508,6 +533,7 @@ Note that if this processor returns the default value rather than the input valu
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.optional(default='foo')).process(None)
     'foo'
     >>> dc.Checker(dc.optional(default='foo')).process('bar')
@@ -532,6 +558,7 @@ This processor can also apply a series of processors to each element in the ``li
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.list).is_valid([1,2,3])
     True
     >>> dc.Checker(dc.list).is_valid('foobar')
@@ -561,6 +588,7 @@ This processor can also apply a series of processors to each element in the ``tu
 *Examples*
 
 ::
+
     >>> dc.Checker(dc.tuple).is_valid((1,2,3))
     True
     >>> dc.Checker(dc.tuple).is_valid('foobar')
@@ -594,6 +622,7 @@ This processor can also apply a series of processors to each item in the ``dict`
 *Examples*
 
 ::
+
     >>> checker = dc.Checker(dc.dict({
     ...     'foo': [dc.required, dc.string, dc.upper],
     ...     'bar': [dc.required, dc.integer(max=10)],
@@ -625,6 +654,7 @@ Custom Processors
 You can implement your own processors for use in **datachecker** by simply implementing a callable that accepts at least one argument to receive the input data, and then returns the (possibly modified) data. For example:
 
 ::
+
     >>> def reverse(data):
     ...     return data[::-1]
     ... 
@@ -647,6 +677,7 @@ To act as a validator rather than a sanitizer, simply raise a CheckerError excep
 If necessary, you can also implement a function that itself returns a processor function. This is handy when you'd like to do some up-front logic or preparation that doesn't need to occur during every single invocation of your processor. To do this, you'll need to mark the generating function with a decorator. For example:
 
 ::
+
     >>> @dc.processor
     ... def is_twentyfive():
     ...     twentyfive = 5 * 5
