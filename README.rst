@@ -5,7 +5,7 @@ datachecker
 
 A simple example:
 
-    ::python
+::
     >>> import datachecker as dc
     >>> checker = dc.Checker(dc.string, dc.strip, dc.email)
     >>> checker.is_valid('hello@example.com')
@@ -25,7 +25,7 @@ A simple example:
 
 A more involved example:
 
-    ::python
+::
     >>> import datachecker as dc
     >>> checker = dc.Checker(dc.dict({
     ...     'foo': [dc.required, dc.string, dc.upper],
@@ -61,13 +61,13 @@ Installation
 
 Use `pip <http://www.pip-installer.org>`_. There are no excuses.
 
-    ::
+::
     pip install datachecker
 
 If you plan on using the DNS-checking abilities of the built-in email validator, then you'll also need
 to install `dnspython <http://www.dnspython.org>`_.
 
-    ::
+::
     pip install dnspython
 
 
@@ -87,12 +87,12 @@ Checker
 
 To use **datachecker**, you first build yourself a Checker object, telling it what processors to use. You can specify any number of processors to apply to your input data.
 
-    ::python
+::
     >>> checker = dc.Checker(dc.required, dc.string, dc.upper)
 
 Then you can use your Checker object to validate and/or sanitize your data:
 
-    ::python
+::
     >>> checker.process('foo')
     u'FOO'
     >>> checker.is_valid('foo')
@@ -115,17 +115,17 @@ Built-In Processors
 
 **integer**
 
-Ensures the input value is an integer datatype (either `int` or `long`).
+Ensures the input value is an integer datatype (either ``int`` or ``long``).
 
 *Options*
 
-* coerce: True/False; Will cause the processor to attempt to coerce the value into an integer. This allows you to accept an input of "1" and interpret it as the integer 1.
+* coerce: True/False; Will cause the processor to attempt to coerce the value into an integer. This allows you to accept an input of "1" and interpret it as the ``integer`` 1.
 * min: Enforces a minimum value check. Defaults to ``None``, which means don't check.
 * max: Enforces a maximum value check. Defaults to ``None``, which means don't check.
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.integer).is_valid(1)
     True
     >>> dc.Checker(dc.integer).is_valid('1')
@@ -142,17 +142,17 @@ Ensures the input value is an integer datatype (either `int` or `long`).
 
 **float**
 
-Ensures the input value is a float datatype.
+Ensures the input value is a ``float`` datatype.
 
 *Options*
 
-* coerce: True/False; Will cause the processor to attempt to coerce the value into a float. This allows you to accept an input of "1.23" and interpret it as the float 1.23.
+* coerce: True/False; Will cause the processor to attempt to coerce the value into a ``float``. This allows you to accept an input of "1.23" and interpret it as the ``float`` 1.23.
 * min: Enforces a minimum value check. Defaults to ``None``, which means don't check.
 * max: Enforces a maximum value check. Defaults to ``None``, which means don't check.
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.float).is_valid(1)
     False
     >>> dc.Checker(dc.float).is_valid(1.23)
@@ -171,17 +171,17 @@ Ensures the input value is a float datatype.
 
 **decimal**
 
-Ensures the input value is a Decimal datatype.
+Ensures the input value is a ``Decimal`` datatype.
 
 *Options*
 
-* coerce: True/False; Will cause the processor to attempt to coerce the value into a Decimal. This allows you to accept an input of "1.23" and interpret it as Decimal('1.23').
+* coerce: True/False; Will cause the processor to attempt to coerce the value into a ``Decimal``. This allows you to accept an input of "1.23" and interpret it as Decimal('1.23').
 * min: Enforces a minimum value check. Defaults to ``None``, which means don't check.
 * max: Enforces a maximum value check. Defaults to ``None``, which means don't check.
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.decimal).is_valid(Decimal('1.23'))
     True
     >>> dc.Checker(dc.decimal).is_valid('1.23')
@@ -206,7 +206,7 @@ Ensures the input value is a string datatype.
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.string).is_valid('abc')
     True
     >>> dc.Checker(dc.string).is_valid(1.23)
@@ -219,15 +219,15 @@ Ensures the input value is a string datatype.
 
 **boolean**
 
-Ensures the input value is a boolean datatype.
+Ensures the input value is a ``bool`` datatype.
 
 *Options*
 
-* coerce: True/False; Will cause the processor to attempt to coerce the value into a boolean. Values that resembe "True"/"Yes"/"Y"/"1"/1/"On" will evaluate to True, values that resemble "False"/"No"/"N"/"0"/0/"Off" will evaluate to False.
+* coerce: True/False; Will cause the processor to attempt to coerce the value into a ``bool``. Values that resembe "True"/"Yes"/"Y"/"1"/1/"On" will evaluate to True, values that resemble "False"/"No"/"N"/"0"/0/"Off" will evaluate to False.
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.boolean).is_valid(True)
     True
     >>> dc.Checker(dc.boolean).is_valid(False)
@@ -256,7 +256,7 @@ Ensures that the input iterable has a length within the specified bounds. This p
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.length(min=2)).is_valid([1, 2, 3])
     True
     >>> dc.Checker(dc.length(min=2)).is_valid('abc')
@@ -280,7 +280,7 @@ Ensures that the input value is a string representation of an IP address.
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.ip).is_valid('127.0.0.1')
     True
     >>> dc.Checker(dc.ip).is_valid('foo')
@@ -303,7 +303,7 @@ There are also a set of built-in matchers: `alpha`, `numeric`, `alphanumeric`
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.match(r'^[abc]+$')).is_valid('abcabc')
     True
     >>> dc.Checker(dc.match(r'^[abc]+$')).is_valid('foo')
@@ -336,7 +336,7 @@ Ensures that the input value looks like an email address.
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.email).is_valid('foo@bar.com')
     True
     >>> dc.Checker(dc.email).is_valid('foo')
@@ -359,7 +359,7 @@ Ensures that the input value looks like a URL.
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.url).is_valid('http://www.google.com')
     True
     >>> dc.Checker(dc.url).is_valid('www.google.com')
@@ -378,7 +378,7 @@ Forces the input string to be all lowercase characters.
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.lower).process('FooBar')
     'foobar'
 
@@ -389,7 +389,7 @@ Forces the input string to be all uppercase characters.
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.upper).process('FooBar')
     'FOOBAR'
 
@@ -406,7 +406,7 @@ Removes whitespace (or specified characters) from one or both ends of a string.
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.strip).process('  foo  ')
     'foo'
     >>> dc.Checker(dc.strip(right=False)).process('  foo  ')
@@ -423,7 +423,7 @@ Forces the input string to be title-cased.
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.title).process('foo bar')
     'Foo Bar'
 
@@ -434,7 +434,7 @@ Forces the input to have its casing reversed so that lowercased characters becom
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.swapcase).process('FooBar')
     'fOObAR'
 
@@ -445,7 +445,7 @@ Forces the input string to have its first character capitalized and the rest low
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.capitalize).process('FooBar')
     'Foobar'
 
@@ -456,7 +456,7 @@ Ensures that the input value is a specific value.
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.constant('foo')).is_valid('foo')
     True
     >>> dc.Checker(dc.constant('foo')).is_valid('bar')
@@ -471,7 +471,7 @@ Ensures that the input value is one of a list of acceptible values.
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.choice('foo', 'bar')).is_valid('foo')
     True
     >>> dc.Checker(dc.choice('foo', 'bar')).is_valid('bar')
@@ -488,7 +488,7 @@ Ensures that a value was specified (e.g., the value is not ``None``)
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.required).is_valid('foo')
     True
     >>> dc.Checker(dc.required).is_valid(None)
@@ -507,7 +507,7 @@ Note that if this processor returns the default value rather than the input valu
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.optional(default='foo')).process(None)
     'foo'
     >>> dc.Checker(dc.optional(default='foo')).process('bar')
@@ -531,7 +531,7 @@ This processor can also apply a series of processors to each element in the ``li
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.list).is_valid([1,2,3])
     True
     >>> dc.Checker(dc.list).is_valid('foobar')
@@ -560,7 +560,7 @@ This processor can also apply a series of processors to each element in the ``tu
 
 *Examples*
 
-    ::python
+::
     >>> dc.Checker(dc.tuple).is_valid((1,2,3))
     True
     >>> dc.Checker(dc.tuple).is_valid('foobar')
@@ -593,7 +593,7 @@ This processor can also apply a series of processors to each item in the ``dict`
 
 *Examples*
 
-    ::python
+::
     >>> checker = dc.Checker(dc.dict({
     ...     'foo': [dc.required, dc.string, dc.upper],
     ...     'bar': [dc.required, dc.integer(max=10)],
@@ -624,7 +624,7 @@ Custom Processors
 
 You can implement your own processors for use in **datachecker** by simply implementing a callable that accepts at least one argument to receive the input data, and then returns the (possibly modified) data. For example:
 
-    ::python
+::
     >>> def reverse(data):
     ...     return data[::-1]
     ... 
@@ -633,7 +633,7 @@ You can implement your own processors for use in **datachecker** by simply imple
 
 To act as a validator rather than a sanitizer, simply raise a CheckerError exception when the input data is invalid. For Example:
 
-    ::python
+::
     >>> def is_foo(data):
     ...     if data != 'foo':
     ...         raise dc.CheckerError('Not foo!')
@@ -646,7 +646,7 @@ To act as a validator rather than a sanitizer, simply raise a CheckerError excep
 
 If necessary, you can also implement a function that itself returns a processor function. This is handy when you'd like to do some up-front logic or preparation that doesn't need to occur during every single invocation of your processor. To do this, you'll need to mark the generating function with a decorator. For example:
 
-    ::python
+::
     >>> @dc.processor
     ... def is_twentyfive():
     ...     twentyfive = 5 * 5
