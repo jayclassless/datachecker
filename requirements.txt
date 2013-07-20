@@ -2,3 +2,4 @@ dnspython>=1.0
 nosy>=1.1
 nose>=1.0
 coverage
+pylint

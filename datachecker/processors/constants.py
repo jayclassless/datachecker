@@ -10,18 +10,18 @@ __all__ = (
 
 @processor
 def constant(value):
-    def constant(data):
+    def constant_processor(data):
         if data != value:
             raise InvalidError(data)
         return data
-    return constant
+    return constant_processor
 
 
 @processor
 def choice(*choices):
-    def choice(data):
+    def choice_processor(data):
         if data not in choices:
             raise InvalidError(data)
         return data
-    return choice
+    return choice_processor
 

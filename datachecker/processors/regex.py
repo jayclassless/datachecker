@@ -15,7 +15,7 @@ __all__ = (
 @processor
 def match(regex, options=0):
     pattern = re.compile(regex, options)
-    def match(data):
+    def match_processor(data):
         try:
             if pattern.match(data):
                 return data
@@ -23,7 +23,7 @@ def match(regex, options=0):
                 raise FormatError(data)
         except TypeError:
             raise DataTypeError('string')
-    return match
+    return match_processor
 
 
 @processor

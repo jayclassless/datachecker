@@ -15,9 +15,10 @@ __all__ = (
 )
 
 
+# pylint: disable=W0622
 @processor
 def integer(coerce=False, min=None, max=None):
-    def integer(data):
+    def integer_processor(data):
         if not isinstance(data, (int, long)) and not coerce:
             raise DataTypeError('integer')
         else:
@@ -25,7 +26,8 @@ def integer(coerce=False, min=None, max=None):
                 data = int(data)
             except (ValueError, TypeError):
                 if isinstance(data, basestring):
-                    # int() won't convert floats that are strings, so try float()ing them first
+                    # int() won't convert floats that are strings,
+                    # so try float()ing them first
                     try:
                         data = int(__builtin__.float(data))
                     except (ValueError, TypeError):
@@ -37,12 +39,13 @@ def integer(coerce=False, min=None, max=None):
 
         return data
 
-    return integer
+    return integer_processor
 
 
+# pylint: disable=W0622
 @processor
 def float(coerce=False, min=None, max=None):
-    def float(data):
+    def float_processor(data):
         if not isinstance(data, __builtin__.float) and not coerce:
             raise DataTypeError('float')
         else:
@@ -55,12 +58,13 @@ def float(coerce=False, min=None, max=None):
 
         return data
 
-    return float
+    return float_processor
 
 
+# pylint: disable=W0622
 @processor
 def decimal(coerce=False, min=None, max=None):
-    def decimal(data):
+    def decimal_processor(data):
         if not isinstance(data, Decimal) and not coerce:
             raise DataTypeError('decimal')
         else:
@@ -73,12 +77,13 @@ def decimal(coerce=False, min=None, max=None):
 
         return data
 
-    return decimal
+    return decimal_processor
 
 
+# pylint: disable=W0622
 @processor
 def string(coerce=False):
-    def string(data):
+    def string_processor(data):
         if not isinstance(data, basestring) and not coerce:
             raise DataTypeError('string')
         elif isinstance(data, (dict, list, tuple, type(None))):
@@ -88,12 +93,13 @@ def string(coerce=False):
 
         return data
 
-    return string
+    return string_processor
 
 
+# pylint: disable=W0622
 @processor
 def boolean(coerce=False):
-    def boolean(data):
+    def boolean_processor(data):
         if not isinstance(data, bool) and not coerce:
             raise DataTypeError('boolean')
         else:
@@ -105,5 +111,5 @@ def boolean(coerce=False):
             else:
                 raise DataTypeError('boolean')
 
-    return boolean
+    return boolean_processor
 

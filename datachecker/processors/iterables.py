@@ -7,16 +7,17 @@ __all__ = (
 )
 
 
+# pylint: disable=W0622
 @processor
 def length(min=None, max=None, exact=None):
-    def length(data):
+    def length_processor(data):
         try:
-            l = len(data)
+            data_length = len(data)
         except TypeError:
             raise DataTypeError('iterable')
 
-        check_bounds(l, min=min, max=max, exact=exact)
+        check_bounds(data_length, min=min, max=max, exact=exact)
 
         return data
-    return length
+    return length_processor
 

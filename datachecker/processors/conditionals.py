@@ -10,20 +10,20 @@ __all__ = (
 
 @processor
 def required():
-    def required(data):
+    def required_processor(data):
         if data is None:
             raise DataRequiredError()
         return data
-    return required
+    return required_processor
 
 
 @processor
 def optional(default=None):
-    def optional(data):
+    def optional_processor(data):
         if data is None:
             signal = ShortCircuitSignal()
             signal.data = default
             raise signal
         return data
-    return optional
+    return optional_processor
 

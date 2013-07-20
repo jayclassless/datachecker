@@ -1,3 +1,4 @@
+# pylint: disable=W0622,W0401
 from .conditionals import *
 from .constants import *
 from .datatypes import *

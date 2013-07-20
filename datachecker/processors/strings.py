@@ -11,27 +11,27 @@ __all__ = (
 
 @processor
 def lower():
-    def lower(data):
+    def lower_processor(data):
         try:
             return data.lower()
         except AttributeError:
             raise DataTypeError('string')
-    return lower
+    return lower_processor
 
 
 @processor
 def upper():
-    def upper(data):
+    def upper_processor(data):
         try:
             return data.upper()
         except AttributeError:
             raise DataTypeError('string')
-    return upper
+    return upper_processor
 
 
 @processor
 def strip(left=True, right=True, chars=None):
-    def strip(data):
+    def strip_processor(data):
         try:
             if left and right:
                 return data.strip(chars)
@@ -43,5 +43,5 @@ def strip(left=True, right=True, chars=None):
                 return data
         except AttributeError:
             raise DataTypeError('string')
-    return strip
+    return strip_processor
 

@@ -9,12 +9,13 @@ __all__ = (
 
 
 def processor(func):
-    func._processor_generator = True
+    setattr(func, '_processor_generator', True)
     return func
 
 def is_processor_generator(func):
     return getattr(func, '_processor_generator', False)
 
+# pylint: disable=W0622
 def check_bounds(data, min=None, max=None, exact=None):
     if exact is not None and data != exact:
         raise BoundsError('not', exact)

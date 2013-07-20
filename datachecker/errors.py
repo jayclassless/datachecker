@@ -19,17 +19,23 @@ class CheckerError(Exception):
 
 class DataTypeError(CheckerError):
     def __init__(self, expected_type):
-        super(DataTypeError, self).__init__('Value is not of type: %s' % expected_type)
+        super(DataTypeError, self).__init__(
+                'Value is not of type: %s' % expected_type
+        )
 
 
 class BoundsError(CheckerError):
     def __init__(self, direction, limit):
-        super(BoundsError, self).__init__('Value is %s the limit of %s' % (direction, limit))
+        super(BoundsError, self).__init__(
+                'Value is %s the limit of %s' % (direction, limit)
+        )
 
 
 class InvalidError(CheckerError):
     def __init__(self, data):
-        super(InvalidError, self).__init__('%s is not a valid data value' % data)
+        super(InvalidError, self).__init__(
+                '%s is not a valid data value' % data
+        )
 
 
 class FormatError(CheckerError):

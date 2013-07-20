@@ -9,14 +9,14 @@ __all__ = (
 )
 
 
-
+# pylint: disable=C0103
 @processor
 def ip(ipv4=True, ipv6=socket.has_ipv6):
 
     if ipv6 and not socket.has_ipv6:
         raise ValueError('IPv6 is not supported by this platform')
 
-    def ip(data):
+    def ip_processor(data):
         if ipv4:
             try:
                 socket.inet_pton(socket.AF_INET, data)
@@ -39,5 +39,5 @@ def ip(ipv4=True, ipv6=socket.has_ipv6):
                 return data
 
         return data
-    return ip
+    return ip_processor
 
