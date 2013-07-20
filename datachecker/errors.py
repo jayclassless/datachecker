@@ -8,12 +8,13 @@ __all__ = (
     'DataRequiredError',
     'DictionaryError',
     'ExtraDataError',
+    'CheckerSignal',
+    'ShortCircuitSignal',
 )
 
 
 class CheckerError(Exception):
     field = None
-    pass
 
 
 class DataTypeError(CheckerError):
@@ -50,4 +51,12 @@ class DictionaryError(CheckerError):
 class ExtraDataError(CheckerError):
     def __init__(self):
         super(ExtraDataError, self).__init__('Extraneous data was provided')
+
+
+
+class CheckerSignal(Exception):
+    pass
+
+class ShortCircuitSignal(CheckerSignal):
+    data = None
 

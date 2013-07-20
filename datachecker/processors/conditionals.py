@@ -1,4 +1,4 @@
-from ..errors import DataRequiredError
+from ..errors import DataRequiredError, ShortCircuitSignal
 from ..util import processor
 
 
@@ -21,7 +21,9 @@ def required():
 def optional(default=None):
     def optional(data):
         if data is None:
-            return default
+            signal = ShortCircuitSignal()
+            signal.data = default
+            raise signal
         return data
     return optional
 

@@ -1,4 +1,4 @@
-from .errors import CheckerError
+from .errors import CheckerError, ShortCircuitSignal
 from .util import is_processor_generator
 
 
@@ -18,7 +18,11 @@ class Checker(object):
     def process(self, data):
         clean_data = data
         for processor in self.processors:
-            clean_data = processor(clean_data)
+            try:
+                clean_data = processor(clean_data)
+            except ShortCircuitSignal as ex:
+                clean_data = ex.data
+                break
         return clean_data
 
     def is_valid(self, data):
