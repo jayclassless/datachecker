@@ -15,6 +15,7 @@ __all__ = (
 @processor
 def match(regex, options=0):
     pattern = re.compile(regex, options)
+
     def match_processor(data):
         try:
             if pattern.match(data):

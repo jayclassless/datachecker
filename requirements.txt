@@ -3,3 +3,5 @@ nosy>=1.1
 nose>=1.0
 coverage
 pylint
+tissue
+pep8

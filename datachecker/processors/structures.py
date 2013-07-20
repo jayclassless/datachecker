@@ -2,7 +2,7 @@ import __builtin__
 
 from ..checker import Checker
 from ..errors import CheckerError, DataTypeError, DictionaryError, \
-        ExtraDataError
+    ExtraDataError
 from ..util import processor
 
 

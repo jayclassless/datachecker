@@ -20,27 +20,29 @@ class CheckerError(Exception):
 class DataTypeError(CheckerError):
     def __init__(self, expected_type):
         super(DataTypeError, self).__init__(
-                'Value is not of type: %s' % expected_type
+            'Value is not of type: %s' % expected_type
         )
 
 
 class BoundsError(CheckerError):
     def __init__(self, direction, limit):
         super(BoundsError, self).__init__(
-                'Value is %s the limit of %s' % (direction, limit)
+            'Value is %s the limit of %s' % (direction, limit)
         )
 
 
 class InvalidError(CheckerError):
     def __init__(self, data):
         super(InvalidError, self).__init__(
-                '%s is not a valid data value' % data
+            '%s is not a valid data value' % data
         )
 
 
 class FormatError(CheckerError):
     def __init__(self, data):
-        super(FormatError, self).__init__('%s is not formatted properly' % data)
+        super(FormatError, self).__init__(
+            '%s is not formatted properly' % data
+        )
 
 
 class DataRequiredError(CheckerError):
@@ -59,9 +61,9 @@ class ExtraDataError(CheckerError):
         super(ExtraDataError, self).__init__('Extraneous data was provided')
 
 
-
 class CheckerSignal(Exception):
     pass
+
 
 class ShortCircuitSignal(CheckerSignal):
     data = None
