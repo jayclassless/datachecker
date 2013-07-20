@@ -68,6 +68,7 @@ def tuple(*processors, **options):
 def dict(structure, **options):
     coerce = options.get('coerce', False)
     ignore_extra = options.get('ignore_extra', False)
+    ignore_missing = options.get('ignore_missing', False)
     pass_extra = options.get('pass_extra', False)
     capture_all_errors = options.get('capture_all_errors', False)
 
@@ -107,15 +108,16 @@ def dict(structure, **options):
                     ex.field = name
                     raise ex
 
-        for name in (set(procs.keys()) - seen):
-            try:
-                cleandata[name] = procs[name].process(None)
-            except CheckerError as ex:
-                if capture_all_errors:
-                    errors[name] = unicode(ex)
-                else:
-                    ex.field = name
-                    raise ex
+        if not ignore_missing:
+            for name in (set(procs.keys()) - seen):
+                try:
+                    cleandata[name] = procs[name].process(None)
+                except CheckerError as ex:
+                    if capture_all_errors:
+                        errors[name] = unicode(ex)
+                    else:
+                        ex.field = name
+                        raise ex
 
         if errors:
             raise DictionaryError(errors)
