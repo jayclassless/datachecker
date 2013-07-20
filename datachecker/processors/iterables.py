@@ -4,6 +4,7 @@ from ..util import processor, check_bounds
 
 __all__ = (
     'length',
+    'iterable',
 )
 
 
@@ -20,4 +21,16 @@ def length(min=None, max=None, exact=None):
 
         return data
     return length_processor
+
+
+@processor
+def iterable():
+    def iterable_processor(data):
+        try:
+            iter(data)
+        except TypeError:
+            raise DataTypeError('iterable')
+
+        return data
+    return iterable_processor
 

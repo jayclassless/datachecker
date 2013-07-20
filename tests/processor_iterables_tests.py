@@ -1,3 +1,4 @@
+from decimal import Decimal
 from random import choice
 
 import datachecker as dc
@@ -74,6 +75,46 @@ def test_length_noninterable():
     try:
         output = checker.process(3)
     except dc.DataTypeError:
+        pass
+    else:
+        assert False, 'Got output of: %s' % output
+
+
+GOOD_ITERABLE_TESTS = (
+    [],
+    (),
+    '',
+    [1,2,3],
+    (1,2,3),
+    'abc',
+)
+
+def test_iterable_good():
+    for input in GOOD_ITERABLE_TESTS:
+        yield check_iterable_good, input
+
+def check_iterable_good(input):
+    checker = dc.Checker(dc.iterable)
+    output = checker.process(input)
+    assert output == input, 'Got output of: %s' % output
+
+
+BAD_ITERABLE_TESTS = (
+    (1, dc.DataTypeError),
+    (1.23, dc.DataTypeError),
+    (Decimal('1'), dc.DataTypeError),
+    (True, dc.DataTypeError),
+)
+
+def test_iterable_bad():
+    for input, expected_exception in BAD_ITERABLE_TESTS:
+        yield check_iterable_bad, input, expected_exception
+
+def check_iterable_bad(input, expected_exception):
+    checker = dc.Checker(dc.iterable)
+    try:
+        output = checker.process(input)
+    except expected_exception:
         pass
     else:
         assert False, 'Got output of: %s' % output

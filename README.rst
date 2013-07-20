@@ -670,6 +670,26 @@ This processor can also apply a series of processors to each item in the ``dict`
     datachecker.errors.BoundsError: Value is above the limit of 10
 
 
+**iterable**
+
+Ensures that the input data is an iterable.
+
+*Examples*
+
+::
+
+    >>> dc.Checker(dc.iterable).is_valid([1,2,3])
+    True
+    >>> dc.Checker(dc.iterable).is_valid((1,2,3))
+    True
+    >>> dc.Checker(dc.iterable).is_valid('foo')
+    True
+    >>> dc.Checker(dc.iterable).is_valid({'foo':'bar'})
+    True
+    >>> dc.Checker(dc.iterable).is_valid(1)
+    False
+
+
 Custom Processors
 -----------------
 
