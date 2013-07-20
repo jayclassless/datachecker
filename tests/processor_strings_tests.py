@@ -34,6 +34,21 @@ STRING_MANIP_GOOD_TESTS = (
     (dc.strip(left=False, right=False), '  foo', '  foo'),
     (dc.strip(left=False, right=False), '  ', '  '),
     (dc.strip(left=False, right=False), '', ''),
+
+    (dc.title, 'foo', 'Foo'),
+    (dc.title, 'foo bar', 'Foo Bar'),
+    (dc.title, 'fOo bAr', 'Foo Bar'),
+    (dc.title, "they're bill's friends.", "They're Bill's Friends."),
+
+    (dc.swapcase, 'foo', 'FOO'),
+    (dc.swapcase, 'foo bar', 'FOO BAR'),
+    (dc.swapcase, 'fOo bAr', 'FoO BaR'),
+    (dc.swapcase, "they're bill's friends.", "THEY'RE BILL'S FRIENDS."),
+
+    (dc.capitalize, 'foo', 'Foo'),
+    (dc.capitalize, 'foo bar', 'Foo bar'),
+    (dc.capitalize, 'fOo bAr', 'Foo bar'),
+    (dc.capitalize, "they're bill's friends.", "They're bill's friends."),
 )
 
 def test_string_manip_good():
@@ -61,6 +76,21 @@ STRING_MANIP_BAD_TESTS = (
     (dc.strip, 1.234),
     (dc.strip, False),
     (dc.strip, Decimal('1.234')),
+
+    (dc.title, 1),
+    (dc.title, 1.234),
+    (dc.title, False),
+    (dc.title, Decimal('1.234')),
+
+    (dc.swapcase, 1),
+    (dc.swapcase, 1.234),
+    (dc.swapcase, False),
+    (dc.swapcase, Decimal('1.234')),
+
+    (dc.capitalize, 1),
+    (dc.capitalize, 1.234),
+    (dc.capitalize, False),
+    (dc.capitalize, Decimal('1.234')),
 )
 
 def test_string_manip_bad():

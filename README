@@ -388,6 +388,33 @@ _Examples_
     'www.example'
 
 
+### title
+Forces the input string to be title-cased.
+
+_Examples_
+
+    >>> dc.Checker(dc.title).process('foo bar')
+    'Foo Bar'
+
+
+### swapcase
+Forces the input to have its casing reversed so that lowercased characters become uppercased and vice-versa.
+
+_Examples_
+
+    >>> dc.Checker(dc.swapcase).process('FooBar')
+    'fOObAR'
+
+
+### capitalize
+Forces the input string to have its first character capitalized and the rest lowercase.
+
+_Examples_
+
+    >>> dc.Checker(dc.capitalize).process('FooBar')
+    'Foobar'
+
+
 ### constant
 Ensures that the input value is a specific value.
 
