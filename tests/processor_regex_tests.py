@@ -5,17 +5,14 @@ import datachecker as dc
 
 REGEX_GOOD_TESTS = (
     (dc.alpha, 'abc'),
-    (dc.alpha, ''),
 
     (dc.numeric, '123'),
-    (dc.numeric, ''),
 
     (dc.alphanumeric, 'abc'),
     (dc.alphanumeric, '123'),
     (dc.alphanumeric, 'abc123'),
     (dc.alphanumeric, '123abc'),
     (dc.alphanumeric, 'a1b2c3'),
-    (dc.alphanumeric, ''),
 )
 
 def test_regex_good():
@@ -34,18 +31,21 @@ REGEX_BAD_TESTS = (
     (dc.alpha, 'abc '),
     (dc.alpha, '!abc'),
     (dc.alpha, 'a_b'),
+    (dc.alpha, ''),
 
     (dc.numeric, 'abc'),
     (dc.numeric, 'abc123'),
     (dc.numeric, '123 '),
     (dc.numeric, '!123'),
     (dc.numeric, '1_2'),
+    (dc.numeric, ''),
 
     (dc.alphanumeric, ' abc'),
     (dc.alphanumeric, ' 123'),
     (dc.alphanumeric, '!abc'),
     (dc.alphanumeric, '!123'),
     (dc.alphanumeric, 'a_c'),
+    (dc.alphanumeric, ''),
 )
 REGEX_BAD_TESTS2 = (
     (dc.alpha, 123),

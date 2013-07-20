@@ -28,15 +28,15 @@ def match(regex, options=0):
 
 @processor
 def alpha():
-    return match(r'^[^\W\d_]*$', options=re.UNICODE)
+    return match(r'^[^\W\d_]+$', options=re.UNICODE)
 
 
 @processor
 def numeric():
-    return match(r'^\d*$', options=re.UNICODE)
+    return match(r'^\d+$', options=re.UNICODE)
 
 
 @processor
 def alphanumeric():
-    return match(r'^[^\W_]*$', options=re.UNICODE)
+    return match(r'^[^\W_]+$', options=re.UNICODE)
 
