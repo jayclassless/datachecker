@@ -1,28 +1,23 @@
-# datachecker
+datachecker
+===========
 
-`datachecker` is a simple library for performing common validations and sanitization of data.
+**datachecker** is a simple library for performing common validations and sanitization of data.
 
 A simple example:
 
+    ::python
     >>> import datachecker as dc
-
     >>> checker = dc.Checker(dc.string, dc.strip, dc.email)
-
     >>> checker.is_valid('hello@example.com')
     True
-
     >>> checker.process('hello@example.com')
     u'hello@example.com'
-
     >>> checker.is_valid('  hello@example.com')
     True
-
     >>> checker.process('  hello@example.com')
     u'hello@example.com'
-
     >>> checker.is_valid('bad data')
     False
-
     >>> checker.process('bad data')
     Traceback (most recent call last):
       ...
@@ -30,27 +25,24 @@ A simple example:
 
 A more involved example:
 
+    ::python
     >>> import datachecker as dc
-
     >>> checker = dc.Checker(dc.dict({
     ...     'foo': [dc.required, dc.string, dc.upper],
     ...     'bar': [dc.required, dc.integer(max=10)],
     ...     'baz': [dc.optional(default='green'), dc.string(coerce=True), dc.lower],
     ... }))
-
     >>> checker.process({
     ...     'foo': 'Happy',
     ...     'bar': 5,
     ... })
     {'baz': 'green', 'foo': u'HAPPY', 'bar': 5}
-
     >>> checker.process({
     ...     'foo': 'Happy',
     ...     'bar': 5,
     ...     'baz': 'PURPLE!'
     ... })
     {'baz': u'purple!', 'foo': u'HAPPY', 'bar': 5}
-
     >>> checker.process({
     ...     'foo': 'Turn it up',
     ...     'bar': 11,
@@ -64,21 +56,25 @@ When the data being checked passes all validations, the checker will return the 
 data. Othewise, it will raise a CheckerError exception.
 
 
-## Installation
+Installation
+------------
 
-Use [pip](http://www.pip-installer.org). There are no excuses.
+Use `pip <http://www.pip-installer.org>`_. There are no excuses.
 
+    ::
     pip install datachecker
 
 If you plan on using the DNS-checking abilities of the built-in email validator, then you'll also need
-to install [dnspython](http://www.dnspython.org).
+to install `dnspython <http://www.dnspython.org>`_.
 
+    ::
     pip install dnspython
 
 
-## How it Works
+How it Works
+------------
 
-The main concept around `datachecker` is that it sends the incoming data through a pipeline of processors,
+The main concept around **datachecker** is that it sends the incoming data through a pipeline of processors,
 feeding the output of one as the input to the next. If we can get to the end of the pipeline without raising
 an exception, then the resulting data is declared valid.
 
@@ -86,14 +82,17 @@ Processors that check the data against some rule and raises an exception when th
 are known as "validators". Processors that alter the data as it passes through them are known as "sanitizers".
 
 
-## Checker
+Checker
+-------
 
-To use `datachecker`, you first build yourself a Checker object, telling it what processors to use. You can specify any number of processors to apply to your input data.
+To use **datachecker**, you first build yourself a Checker object, telling it what processors to use. You can specify any number of processors to apply to your input data.
 
+    ::python
     >>> checker = dc.Checker(dc.required, dc.string, dc.upper)
 
 Then you can use your Checker object to validate and/or sanitize your data:
 
+    ::python
     >>> checker.process('foo')
     u'FOO'
     >>> checker.is_valid('foo')
@@ -101,26 +100,32 @@ Then you can use your Checker object to validate and/or sanitize your data:
 
 The Checker object exposes two methods:
 
-### process
-The process method runs your input data through the processors you specified and returns the resulting value. If any of the processors finds the input data to be invalid, a CheckerError exception will be raised.
+**process(data)**
 
-### is_valid
-The is_valid method returns a simple boolean indicating whether or not the input data passes successfuly through all the processors.
+    The process method runs your input data through the processors you specified and returns the resulting value. If any of the processors finds the input data to be invalid, a CheckerError exception will be raised.
+
+**is_valid(data)**
+
+    The is_valid method returns a simple boolean indicating whether or not the input data passes successfuly through all the processors.
 
 
-## Built-In Processors
+Built-In Processors
+-------------------
 
-### integer
+
+**integer**
+
 Ensures the input value is an integer datatype (either `int` or `long`).
 
-_Options_
+*Options*
 
 * coerce: True/False; Will cause the processor to attempt to coerce the value into an integer. This allows you to accept an input of "1" and interpret it as the integer 1.
-* min: Enforces a minimum value check. Defaults to `None`, which means don't check.
-* max: Enforces a maximum value check. Defaults to `None`, which means don't check.
+* min: Enforces a minimum value check. Defaults to ``None``, which means don't check.
+* max: Enforces a maximum value check. Defaults to ``None``, which means don't check.
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.integer).is_valid(1)
     True
     >>> dc.Checker(dc.integer).is_valid('1')
@@ -135,17 +140,19 @@ _Examples_
     True
 
 
-### float
+**float**
+
 Ensures the input value is a float datatype.
 
-_Options_
+*Options*
 
 * coerce: True/False; Will cause the processor to attempt to coerce the value into a float. This allows you to accept an input of "1.23" and interpret it as the float 1.23.
-* min: Enforces a minimum value check. Defaults to `None`, which means don't check.
-* max: Enforces a maximum value check. Defaults to `None`, which means don't check.
+* min: Enforces a minimum value check. Defaults to ``None``, which means don't check.
+* max: Enforces a maximum value check. Defaults to ``None``, which means don't check.
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.float).is_valid(1)
     False
     >>> dc.Checker(dc.float).is_valid(1.23)
@@ -162,17 +169,19 @@ _Examples_
     True
 
 
-### decimal
+**decimal**
+
 Ensures the input value is a Decimal datatype.
 
-_Options_
+*Options*
 
 * coerce: True/False; Will cause the processor to attempt to coerce the value into a Decimal. This allows you to accept an input of "1.23" and interpret it as Decimal('1.23').
-* min: Enforces a minimum value check. Defaults to `None`, which means don't check.
-* max: Enforces a maximum value check. Defaults to `None`, which means don't check.
+* min: Enforces a minimum value check. Defaults to ``None``, which means don't check.
+* max: Enforces a maximum value check. Defaults to ``None``, which means don't check.
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.decimal).is_valid(Decimal('1.23'))
     True
     >>> dc.Checker(dc.decimal).is_valid('1.23')
@@ -187,15 +196,17 @@ _Examples_
     True
 
 
-### string
+**string**
+
 Ensures the input value is a string datatype.
 
-_Options_
+*Options*
 
 * coerce: True/False; Will cause the processor to attempt to coerce the value into a string. This allows you to accept an input of 1.23 and interpret it as the string "1.23".
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.string).is_valid('abc')
     True
     >>> dc.Checker(dc.string).is_valid(1.23)
@@ -206,15 +217,17 @@ _Examples_
     True
 
 
-### boolean
+**boolean**
+
 Ensures the input value is a boolean datatype.
 
-_Options_
+*Options*
 
 * coerce: True/False; Will cause the processor to attempt to coerce the value into a boolean. Values that resembe "True"/"Yes"/"Y"/"1"/1/"On" will evaluate to True, values that resemble "False"/"No"/"N"/"0"/0/"Off" will evaluate to False.
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.boolean).is_valid(True)
     True
     >>> dc.Checker(dc.boolean).is_valid(False)
@@ -231,17 +244,19 @@ _Examples_
     False
 
 
-### length
+**length**
+
 Ensures that the input iterable has a length within the specified bounds. This processor can operate on anything that is an iterable; strings, lists, tuples, or anything that implements the iterable interface.
 
-_Options_
+*Options*
 
-* min: Enforces a minimum length check. Defaults to `None`, which means don't check.
-* min: Enforces a maximum length check. Defaults to `None`, which means don't check.
-* exact: Requires that the length be exactly the specified integer. Defaults to `None`, which means don't check.
+* min: Enforces a minimum length check. Defaults to ``None``, which means don't check.
+* min: Enforces a maximum length check. Defaults to ``None``, which means don't check.
+* exact: Requires that the length be exactly the specified integer. Defaults to ``None``, which means don't check.
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.length(min=2)).is_valid([1, 2, 3])
     True
     >>> dc.Checker(dc.length(min=2)).is_valid('abc')
@@ -254,16 +269,18 @@ _Examples_
     True
 
 
-### ip
+**ip**
+
 Ensures that the input value is a string representation of an IP address.
 
-_Options_
+*Options*
 
 * ipv4: True/False; Tells the processor to allow IPv4-style addresses. Defaults to True.
 * ipv6: True/False; Tells the processor to allow IPv6-style addresses. Defaults to True if the system supports IPv6.
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.ip).is_valid('127.0.0.1')
     True
     >>> dc.Checker(dc.ip).is_valid('foo')
@@ -274,17 +291,19 @@ _Examples_
     False
 
 
-### match
+**match**
+
 Ensures that the input value is a string that matches the given regular expression.
 
 There are also a set of built-in matchers: `alpha`, `numeric`, `alphanumeric`
 
-_Options_
+*Options*
 
 * options: The Python regular expression flags that should be used (e.g., re.UNICODE, re.IGNORECASE, etc). Defaults to 0 (no flags).
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.match(r'^[abc]+$')).is_valid('abcabc')
     True
     >>> dc.Checker(dc.match(r'^[abc]+$')).is_valid('foo')
@@ -307,15 +326,17 @@ _Examples_
     True
 
 
-### email
+**email**
+
 Ensures that the input value looks like an email address.
 
-_Options_
+*Options*
 
 * check_dns: True/False; Tells the processor to actually perform DNS checks on the domain portion of the email address to determine if the domain is actually capable of receiving email. Defaults to False.
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.email).is_valid('foo@bar.com')
     True
     >>> dc.Checker(dc.email).is_valid('foo')
@@ -328,15 +349,17 @@ _Examples_
     False
 
 
-### url
+**url**
+
 Ensures that the input value looks like a URL.
 
-_Options_
+*Options*
 
-* schemes: A list that tells the processor what URL schemes to limit valid data to. Defaults to `None`, which means don't check.
+* schemes: A list that tells the processor what URL schemes to limit valid data to. Defaults to ``None``, which means don't check.
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.url).is_valid('http://www.google.com')
     True
     >>> dc.Checker(dc.url).is_valid('www.google.com')
@@ -349,35 +372,41 @@ _Examples_
     False
 
 
-### lower
+**lower**
+
 Forces the input string to be all lowercase characters.
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.lower).process('FooBar')
     'foobar'
 
 
-### upper
+**upper**
+
 Forces the input string to be all uppercase characters.
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.upper).process('FooBar')
     'FOOBAR'
 
 
-### strip
+**strip**
+
 Removes whitespace (or specified characters) from one or both ends of a string.
 
-_Options_
+*Options*
 
 * left: True/False; Tells the processor to strip characters from the left end of the string. Defaults to True.
 * right: True/False; Tells the processor to strip characters from the right end of the string. Defaults to True.
-* chars: A string of characters that the processor will remove from either end of the string. Defaults to `None`, which means all whitespace
+* chars: A string of characters that the processor will remove from either end of the string. Defaults to ``None``, which means all whitespace
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.strip).process('  foo  ')
     'foo'
     >>> dc.Checker(dc.strip(right=False)).process('  foo  ')
@@ -388,38 +417,46 @@ _Examples_
     'www.example'
 
 
-### title
+**title**
+
 Forces the input string to be title-cased.
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.title).process('foo bar')
     'Foo Bar'
 
 
-### swapcase
+**swapcase**
+
 Forces the input to have its casing reversed so that lowercased characters become uppercased and vice-versa.
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.swapcase).process('FooBar')
     'fOObAR'
 
 
-### capitalize
+**capitalize**
+
 Forces the input string to have its first character capitalized and the rest lowercase.
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.capitalize).process('FooBar')
     'Foobar'
 
 
-### constant
+**constant**
+
 Ensures that the input value is a specific value.
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.constant('foo')).is_valid('foo')
     True
     >>> dc.Checker(dc.constant('foo')).is_valid('bar')
@@ -428,11 +465,13 @@ _Examples_
     True
 
 
-### choice
+**choice**
+
 Ensures that the input value is one of a list of acceptible values.
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.choice('foo', 'bar')).is_valid('foo')
     True
     >>> dc.Checker(dc.choice('foo', 'bar')).is_valid('bar')
@@ -443,28 +482,32 @@ _Examples_
     True
 
 
-### required
-Ensures that a value was specified (e.g., the value is not `None`)
+**required**
 
-_Examples_
+Ensures that a value was specified (e.g., the value is not ``None``)
 
+*Examples*
+
+    ::python
     >>> dc.Checker(dc.required).is_valid('foo')
     True
     >>> dc.Checker(dc.required).is_valid(None)
     False
 
 
-### optional
-If no input value was specified (e.g., the value is `None`), then this processor will return the specified default value.
+**optional**
+
+If no input value was specified (e.g., the value is ``None``), then this processor will return the specified default value.
 
 Note that if this processor returns the default value rather than the input value, then all processing will stop. No other processors specified in the chain will execute.
 
-_Options_
+*Options*
 
-* default: The value to return if an input value is not specified. Defaults to `None`.
+* default: The value to return if an input value is not specified. Defaults to ``None``.
 
-_Examples_
+*Examples*
 
+    ::python
     >>> dc.Checker(dc.optional(default='foo')).process(None)
     'foo'
     >>> dc.Checker(dc.optional(default='foo')).process('bar')
@@ -476,17 +519,19 @@ _Examples_
 
 
 
-### list
-Ensures that the input value is a `list`.
+**list**
 
-This processor can also apply a series of processors to each element in the `list`.
+Ensures that the input value is a ``list``.
 
-_Options_
+This processor can also apply a series of processors to each element in the ``list``.
 
-* coerce: True/False; Tells the processor to try to coerce the input value into being a `list`. If the value is a `tuple` or some other iterable object, it will be turned into a `list` with all the same elements. Otherwise, the value is turned into a `list` with one element; the original input value. Defaults to False.
+*Options*
 
-_Examples_
+* coerce: True/False; Tells the processor to try to coerce the input value into being a ``list``. If the value is a ``tuple`` or some other iterable object, it will be turned into a ``list`` with all the same elements. Otherwise, the value is turned into a ``list`` with one element; the original input value. Defaults to False.
 
+*Examples*
+
+    ::python
     >>> dc.Checker(dc.list).is_valid([1,2,3])
     True
     >>> dc.Checker(dc.list).is_valid('foobar')
@@ -503,17 +548,19 @@ _Examples_
     ['FOOBAR']
 
 
-### tuple
-Ensures that the input value is a `tuple`.
+**tuple**
 
-This processor can also apply a series of processors to each element in the `tuple`.
+Ensures that the input value is a ``tuple``.
 
-_Options_
+This processor can also apply a series of processors to each element in the ``tuple``.
 
-* coerce: True/False; Tells the processor to try to coerce the input value into being a `tuple`. If the value is a `list` or some other iterable object, it will be turned into a `tuple` with all the same elements. Otherwise, the value is turned into a `tuple` with one element; the original input value. Defaults to False.
+*Options*
 
-_Examples_
+* coerce: True/False; Tells the processor to try to coerce the input value into being a ``tuple``. If the value is a ``list`` or some other iterable object, it will be turned into a ``tuple`` with all the same elements. Otherwise, the value is turned into a ``tuple`` with one element; the original input value. Defaults to False.
 
+*Examples*
+
+    ::python
     >>> dc.Checker(dc.tuple).is_valid((1,2,3))
     True
     >>> dc.Checker(dc.tuple).is_valid('foobar')
@@ -530,21 +577,23 @@ _Examples_
     ('FOOBAR',)
 
 
-### dict
-Ensures that the input value is a `dict`.
+**dict**
 
-This processor can also apply a series of processors to each item in the `dict`.
+Ensures that the input value is a ``dict``.
 
-_Options_
+This processor can also apply a series of processors to each item in the ``dict``.
 
-* coerce: True/False; Tells the processor to try to coerce the input value into being a `dict`. Defaults to False.
+*Options*
+
+* coerce: True/False; Tells the processor to try to coerce the input value into being a ``dict``. Defaults to False.
 * ignore_extra: True/False; Tells the processor to not raise errors if keys exist beyond those that are specified. Defaults to False.
-* ignore_missing: True/False; Tells the processor to not assume `None` for keys that are not found in the input data. Defaults to False.
+* ignore_missing: True/False; Tells the processor to not assume ``None`` for keys that are not found in the input data. Defaults to False.
 * pass_extra: True/False; Tells the processor that any extra keys found in the input data beyond those that are specified should be passed along in the results. Defaults to False, which means the extras are dropped.
 * capture_all_errors: True/False; Tells the processor to process every key in the input data and return an Exception that contains error messages for all keys that failed processing. Defaults to False, which means that the first error encountered in processing is immediately returned.
 
-_Examples_
+*Examples*
 
+    ::python
     >>> checker = dc.Checker(dc.dict({
     ...     'foo': [dc.required, dc.string, dc.upper],
     ...     'bar': [dc.required, dc.integer(max=10)],
@@ -573,8 +622,9 @@ _Examples_
 Custom Processors
 -----------------
 
-You can implement your own processors for use in `datachecker` by simply implementing a callable that accepts at least one argument to receive the input data, and then returns the (possibly modified) data. For example:
+You can implement your own processors for use in **datachecker** by simply implementing a callable that accepts at least one argument to receive the input data, and then returns the (possibly modified) data. For example:
 
+    ::python
     >>> def reverse(data):
     ...     return data[::-1]
     ... 
@@ -583,6 +633,7 @@ You can implement your own processors for use in `datachecker` by simply impleme
 
 To act as a validator rather than a sanitizer, simply raise a CheckerError exception when the input data is invalid. For Example:
 
+    ::python
     >>> def is_foo(data):
     ...     if data != 'foo':
     ...         raise dc.CheckerError('Not foo!')
@@ -595,6 +646,7 @@ To act as a validator rather than a sanitizer, simply raise a CheckerError excep
 
 If necessary, you can also implement a function that itself returns a processor function. This is handy when you'd like to do some up-front logic or preparation that doesn't need to occur during every single invocation of your processor. To do this, you'll need to mark the generating function with a decorator. For example:
 
+    ::python
     >>> @dc.processor
     ... def is_twentyfive():
     ...     twentyfive = 5 * 5
