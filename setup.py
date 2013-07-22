@@ -12,7 +12,7 @@ setup(
     license='MIT',
     keywords=['datachecker', 'data', 'validation', 'validate', 'sanitization', 'sanitize'],
     description='A simple library for performing common validations and sanitization of data.',
-    long_description=open(os.path.join(os.path.dirname(__file__), 'README')).read(),
+    long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
     url='https://bitbucket.org/cloverwireless/datachecker',
     classifiers=[
         'Development Status :: 4 - Beta',

@@ -67,7 +67,7 @@ Use `pip <http://www.pip-installer.org>`_. There are no excuses.
 
     pip install datachecker
 
-If you plan on using the DNS-checking abilities of the built-in email validator, then you'll also need
+If you plan on using the DNS-checking abilities of some of the built-in processors, then you'll also need
 to install `dnspython <http://www.dnspython.org>`_.
 
 ::
@@ -125,7 +125,7 @@ Ensures the input value is an integer datatype (either ``int`` or ``long``).
 
 *Options*
 
-* coerce: True/False; Will cause the processor to attempt to coerce the value into an integer. This allows you to accept an input of "1" and interpret it as the ``integer`` 1.
+* coerce: True/False; Will cause the processor to attempt to coerce the value into an integer. This allows you to accept an input of "1" and interpret it as the integer 1.
 * min: Enforces a minimum value check. Defaults to ``None``, which means don't check.
 * max: Enforces a maximum value check. Defaults to ``None``, which means don't check.
 
@@ -330,7 +330,7 @@ Ensures that the input value looks like a domain.
 
 Ensures that the input value is a string that matches the given regular expression.
 
-There are also a set of built-in matchers: `alpha`, `numeric`, `alphanumeric`
+There are also a set of built-in matchers for common cases: ``alpha``, ``numeric``, and ``alphanumeric``
 
 *Options*
 
@@ -706,6 +706,7 @@ You can implement your own processors for use in **datachecker** by simply imple
 To act as a validator rather than a sanitizer, simply raise a CheckerError exception when the input data is invalid. For Example:
 
 ::
+
     >>> def is_foo(data):
     ...     if data != 'foo':
     ...         raise dc.CheckerError('Not foo!')
