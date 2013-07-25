@@ -76,3 +76,41 @@ def check_regex_bad(processor, input, expected_exception):
     else:
         assert False, 'Got output of: %s' % output
 
+
+REPLACE_GOOD_TESTS = (
+    (dc.collapse_whitespace, 'foo bar', 'foo bar'),
+    (dc.collapse_whitespace, 'foo   bar', 'foo bar'),
+    (dc.collapse_whitespace, 'foo  bar\t\t\nbaz', 'foo bar baz'),
+)
+
+def test_replace_good():
+    for processor, input, expected in REPLACE_GOOD_TESTS:
+        yield check_replace_good, processor, input, expected
+
+def check_replace_good(processor, input, expected):
+    checker = dc.Checker(processor)
+    output = checker.process(input)
+    assert output == expected, 'Got output of: %s' % output
+
+REPLACE_BAD_TESTS = (
+    (dc.collapse_whitespace, 123),
+    (dc.collapse_whitespace, 1.23),
+    (dc.collapse_whitespace, Decimal('1.23')),
+    (dc.collapse_whitespace, True),
+)
+
+def test_replace_bad():
+    for processor, input in REPLACE_BAD_TESTS:
+        yield check_replace_bad, processor, input, dc.DataTypeError
+
+def check_replace_bad(processor, input, expected_exception):
+    checker = dc.Checker(processor)
+    try:
+        output = checker.process(input)
+    except expected_exception:
+        pass
+    except Exception as ex:
+        raise ex
+    else:
+        assert False, 'Got output of: %s' % output
+

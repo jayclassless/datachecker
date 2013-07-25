@@ -9,6 +9,8 @@ __all__ = (
     'alpha',
     'numeric',
     'alphanumeric',
+    'replace',
+    'collapse_whitespace',
 )
 
 
@@ -40,4 +42,21 @@ def numeric():
 @processor
 def alphanumeric():
     return match(r'^[^\W_]+$', options=re.UNICODE)
+
+
+@processor
+def replace(regex, replacement, options=0):
+    mask = re.compile(regex, options)
+
+    def replace_processor(data):
+        try:
+            return mask.sub(replacement, data)
+        except TypeError:
+            raise DataTypeError('string')
+    return replace_processor
+
+
+@processor
+def collapse_whitespace():
+    return replace(r'\s+', u' ', options=re.UNICODE)
 

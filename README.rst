@@ -494,6 +494,26 @@ Forces the input string to have its first character capitalized and the rest low
     'Foobar'
 
 
+**replace**
+
+Performs a regular-expression based string replacement on the input.
+
+There are also a set of built-in replacers for common cases: ``collapse_whitespace``
+
+*Options*
+
+* options: The Python regular expression flags that should be used (e.g., re.UNICODE, re.IGNORECASE, etc). Defaults to 0 (no flags).
+
+*Examples*
+
+::
+
+    >>> dc.Checker(dc.replace(r'\sAnd\s', ' & ')).process('Baked Beans And Spam')
+    'Baked Beans & Spam'
+    >>> dc.Checker(dc.replace(r'\d+', '#')).process('a1b23c456d7890')
+    'a#b#c#d#'
+
+
 **constant**
 
 Ensures that the input value is a specific value.
